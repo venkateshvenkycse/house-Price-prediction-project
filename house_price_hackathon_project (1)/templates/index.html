@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>House Price Predictor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <p class="eyebrow">HACKATHON DEMO · MACHINE LEARNING + SQL</p>
+      <h1>House Price Predictor</h1>
+      <p class="sub">Estimate a residential property's sale price from its features.</p>
+    </header>
+    <section class="panel">
+      <form id="predict-form">
+        <div class="grid">
+          <label>City
+            <select name="city">
+              <option> select one</option>
+              <option>Hyderabad</option><option>Bengaluru</option><option>Vijayawada</option>
+            </select>
+          </label>
+          <label>Locality <select name="locality" id="locality" required><option value="">Choose a city first</option></select></label>
+          <label>Area (sq ft) <input name="area_sqft" type="number" min="101" max="19999" value="1200" required></label>
+          <label>Bedrooms <input name="bedrooms" type="number" min="0" max="4" value="2" required></label>
+          <label>Bathrooms <input name="bathrooms" type="number" min="0" max="4" step="0.5" value="0" required></label>
+          <label>Building age (years) <input name="age_years" type="number" min="0" max="26" value="0"></label>
+          <label>Floor <input name="floor" type="number" min="0" max="50" value="0"></label>
+          <label>Parking
+            <select name="parking"><option>none</option><option>1</option><option>2</option></select>
+          </label>
+          <label>Furnishing
+            <select name="furnishing"><option>unfurnished</option><option>semi</option><option>full</option></select>
+          </label>
+          <label>Expected sale date <input name="sold_on" type="date" id="sold_on"></label>
+        </div>
+        <button type="submit">Predict price</button>
+      </form>
+      <div id="result" class="result" aria-live="polite">Enter the property details and select Predict price.</div>
+    </section>
+    <footer>Demo estimate only · Not a formal property valuation</footer>
+  </main>
+  <script>
+    document.getElementById("sold_on").value = new Date().toISOString().slice(0, 10);
+    const form = document.getElementById("predict-form");
+    const result = document.getElementById("result");
+    const citySelect = form.elements.city;
+    const localitySelect = document.getElementById("locality");
+
+    async function loadLocalities() {
+      localitySelect.innerHTML = '<option value="">Loading localities…</option>';
+      localitySelect.disabled = true;
+      try {
+        const response = await fetch("/api/localities?city=" + encodeURIComponent(citySelect.value));
+        const body = await response.json();
+        localitySelect.innerHTML = "";
+        if (!response.ok || !body.localities || body.localities.length === 0) {
+          localitySelect.add(new Option("No localities found", ""));
+          return;
+        }
+        localitySelect.add(new Option("Choose a locality", ""));
+        body.localities.forEach(name => localitySelect.add(new Option(name, name)));
+      } catch (error) {
+        localitySelect.innerHTML = '<option value="">Could not load localities</option>';
+      } finally {
+        localitySelect.disabled = false;
+      }
+    }
+
+    citySelect.addEventListener("change", loadLocalities);
+    loadLocalities();
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      result.textContent = "Calculating estimate…";
+      const data = Object.fromEntries(new FormData(form).entries());
+      try {
+        const response = await fetch("/predict", {
+          method: "POST", headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(data)
+        });
+        const body = await response.json();
+        if (!response.ok) throw new Error(body.error || "Prediction failed");
+        result.innerHTML = `<span class="result-label">Estimated sale price</span><strong>₹${Math.round(body.predicted_price_inr).toLocaleString("en-IN")}</strong><span>₹${body.predicted_price_lakh.toLocaleString("en-IN")} lakh (approx.)</span>`;
+      } catch (error) {
+        result.textContent = error.message + " — make sure you have run train_model.py.";
+      }
+    });
+  </script>
+</body>
+</html>

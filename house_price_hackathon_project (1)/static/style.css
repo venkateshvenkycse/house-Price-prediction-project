@@ -1,0 +1,77 @@
+* { box-sizing: border-box; }
+:root { font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; color: #172033; background: #f4f6fb; }
+body { margin: 0; padding: 32px 16px; }
+.shell { max-width: 920px; margin: 0 auto; }
+header { padding: 20px 4px 26px; }
+.eyebrow { color: #5266c7; font-size: .76rem; font-weight: 800; letter-spacing: .13em; }
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); letter-spacing: -.04em; margin: 10px 0; }
+.sub { color: #657089; font-size: 1.05rem; }
+.panel { background: white; border: 1px solid #e3e7f0; border-radius: 22px; padding: clamp(18px, 4vw, 34px); box-shadow: 0 18px 55px #18264b0b; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+label { display: flex; flex-direction: column; gap: 8px; color: #3b455c; font-size: .9rem; font-weight: 650; }
+input, select { width: 100%; border: 1px solid #d8deea; border-radius: 10px; padding: 12px; background: #fff; color: #172033; font: inherit; }
+input:focus, select:focus { outline: 2px solid #b7c3ff; border-color: #6478e8; }
+button { margin-top: 24px; width: 100%; padding: 14px 18px; border: 0; border-radius: 12px; background: #334ac5; color: white; font: inherit; font-weight: 750; cursor: pointer; }
+button:hover { background: #273ba6; }
+.result { display: flex; flex-direction: column; gap: 7px; margin-top: 20px; padding: 20px; border-radius: 14px; background: #f4f6ff; color: #56617b; }
+.result strong { color: #202b50; font-size: clamp(1.6rem, 4vw, 2.4rem); }
+.result-label { text-transform: uppercase; letter-spacing: .1em; font-size: .75rem; font-weight: 800; }
+footer { padding: 22px 4px; text-align: center; color: #7b8498; font-size: .85rem; }
+@media (max-width: 620px) { .grid { grid-template-columns: 1fr; } body { padding: 16px 10px; } }
+
+/* Apply a blue gradient to the entire website */
+html {
+    min-height: 100%;
+    background: linear-gradient(135deg, #0f2027, #203a8a, #2b6cb0);
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a8a, #2b6cb0);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #ffffff;
+}
+
+/* Keep the main content readable */
+.container,
+.main-container {
+    background: rgba(255, 255, 255, 0.10);
+    padding: 25px;
+    border-radius: 16px;
+    backdrop-filter: blur(8px);
+}
+
+/* Make headings clear */
+h1, h2, h3 {
+    color: #ffffff;
+}
+
+/* Style form fields */
+input,
+select,
+textarea {
+    background-color: #ffffff;
+    color: #222222;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+/* Style buttons */
+button,
+input[type="submit"] {
+    background: linear-gradient(90deg, #2563eb, #38bdf8);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    cursor: pointer;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    opacity: 0.9;
+}
